@@ -1,0 +1,592 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>P-38 라이트닝 항력 수업</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: 16:9 slide stage with bottom control bar; quiz is a full-stage game mode. Sky-blue ground, ink navy text, sun-yellow + coral accents. */
+:root{
+  --bg:#dff0fb; --stage:#ffffff; --ink:#12263f; --ink2:#46607d; --line:#c9dcec;
+  --sky:#1f8fe0; --sky-soft:#e4f3fd; --sun:#ffc533; --sun-ink:#5a3f00; --coral:#ff5a4d; --mint:#16b57a;
+  --note-bg:#12263f; --note-fg:#f4f8fc; --blank-bg:#fff4cf; --blank-line:#e0a800;
+  --a1:#e5484d; --a2:#1f8fe0; --a3:#f0a500; --a4:#16a56a; --on-a:#ffffff;
+  --shadow:0 10px 30px rgba(18,38,63,.14);
+  --f-head:'Jua','Noto Sans KR',sans-serif; --f-body:'Noto Sans KR',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b1726; --stage:#12263f; --ink:#f1f6fb; --ink2:#a9bdd3; --line:#274462;
+  --sky:#59b4f5; --sky-soft:#17395a; --sun:#ffd25a; --sun-ink:#3b2900; --coral:#ff7b70; --mint:#35d39b;
+  --note-bg:#050c16; --note-fg:#e9f1f9; --blank-bg:#3a3314; --blank-line:#ffd25a;
+  --a1:#d93a40; --a2:#1c7cc4; --a3:#c98800; --a4:#12915a; --shadow:0 10px 30px rgba(0,0,0,.45); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1726; --stage:#12263f; --ink:#f1f6fb; --ink2:#a9bdd3; --line:#274462;
+  --sky:#59b4f5; --sky-soft:#17395a; --sun:#ffd25a; --sun-ink:#3b2900; --coral:#ff7b70; --mint:#35d39b;
+  --note-bg:#050c16; --note-fg:#e9f1f9; --blank-bg:#3a3314; --blank-line:#ffd25a;
+  --a1:#d93a40; --a2:#1c7cc4; --a3:#c98800; --a4:#12915a; --shadow:0 10px 30px rgba(0,0,0,.45); color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);margin:0;
+  padding-block:0;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;align-items:center;gap:10px;overflow-x:hidden;word-break:keep-all;overflow-wrap:anywhere}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+
+.app{width:100%;max-width:min(1400px,calc((100dvh - 96px) * 16 / 9));flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;padding-top:10px}
+.stage{--u:1cqw;container-type:inline-size;position:relative;width:100%;aspect-ratio:16/9;background:var(--stage);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;flex:none}
+@container (max-width:760px){.stage>*{--u:2.35cqw}}
+@media (max-width:760px){.app{max-width:100%}.stage{aspect-ratio:auto;height:calc(100dvh - 140px);min-height:420px}.btn{padding:6px 10px}}
+
+/* slides */
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:calc(var(--u)*2.6) calc(var(--u)*4);gap:calc(var(--u)*1.6);overflow:hidden}
+.slide.on{display:flex;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateX(calc(var(--u)*2))}to{opacity:1;transform:none}}
+@container (max-width:760px){.slide{overflow-y:auto;padding:calc(var(--u)*4) calc(var(--u)*5)}}
+.kicker{font-weight:900;font-size:calc(var(--u)*1.45);letter-spacing:.08em;color:var(--sky);text-transform:uppercase}
+h1,h2{font-family:var(--f-head);font-weight:400;margin:0;text-wrap:balance;line-height:1.15}
+h2{font-size:calc(var(--u)*3.9)}
+.lead{font-size:calc(var(--u)*2.5);line-height:1.5;margin:0;font-weight:500;text-wrap:pretty}
+.small{font-size:calc(var(--u)*1.7);color:var(--ink2);line-height:1.55;margin:0}
+.body{flex:1;min-height:0;display:flex;gap:calc(var(--u)*3);align-items:center}
+.body>*{min-width:0}
+@container (max-width:760px){.body{flex-direction:column;align-items:stretch;flex:none}}
+.col{display:flex;flex-direction:column;gap:calc(var(--u)*1.6);flex:1}
+.fig{flex:1.1;display:flex;align-items:center;justify-content:center;background:var(--sky-soft);border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*1.2);align-self:stretch;min-height:0}
+.fig svg{width:100%;height:100%;max-height:100%}
+@container (max-width:760px){.fig{align-self:auto;min-height:calc(var(--u)*34)}}
+.hl{color:var(--coral);font-weight:900}.hb{color:var(--sky);font-weight:900}
+
+/* fill-in-the-blank chips (initial-consonant hints like the original PDF) */
+.blank{display:inline-block;border:2px dashed var(--blank-line);background:var(--blank-bg);color:var(--ink);border-radius:calc(var(--u)*.9);padding:0 calc(var(--u)*1.1);font-family:var(--f-head);letter-spacing:.12em;line-height:1.35;vertical-align:baseline;white-space:nowrap}
+.blank::after{content:" 눌러서 확인";font-family:var(--f-body);font-size:.45em;letter-spacing:0;color:var(--ink2);font-weight:500}
+.blank.open{background:var(--sun);border-style:solid;border-color:var(--sun);color:var(--sun-ink);letter-spacing:0;animation:pop .35s}
+.blank.open::after{content:""}
+@keyframes pop{50%{transform:scale(1.12)}}
+
+/* notes */
+.notes{position:absolute;left:0;right:0;bottom:0;background:var(--note-bg);color:var(--note-fg);padding:calc(var(--u)*1.4) calc(var(--u)*4) calc(var(--u)*1.8);font-size:calc(var(--u)*1.55);line-height:1.6;transform:translateY(101%);transition:transform .25s;z-index:5;max-height:55%;overflow:auto}
+.notes b{color:var(--sun);display:block;margin-bottom:.2em}
+.stage.shownotes .notes{transform:none}
+@media (prefers-reduced-motion:reduce){.slide.on,.blank.open{animation:none}.notes{transition:none}}
+
+/* control bar */
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-bottom:max(10px,env(safe-area-inset-bottom,0px))}
+.btn{background:var(--stage);border:2px solid var(--line);border-radius:12px;padding:8px 14px;font-weight:700;min-height:44px;color:var(--ink)}
+.btn:hover{border-color:var(--sky)}
+.btn.primary{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn[aria-pressed="true"]{background:var(--sun);border-color:var(--sun);color:var(--sun-ink)}
+.prog{flex:1;min-width:120px;height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--sky),var(--mint));border-radius:99px;transition:width .3s}
+.count{font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink2);min-width:64px;text-align:center}
+.menu{position:fixed;inset:0;background:rgba(5,12,22,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.menu.on{display:flex}
+.menu>div{background:var(--stage);border-radius:18px;max-width:560px;width:100%;max-height:85dvh;overflow:auto;padding:20px}
+.menu h3{font-family:var(--f-head);font-weight:400;font-size:24px;margin:0 0 10px}
+.menu ol{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.menu li button{width:100%;text-align:left;background:none;border:0;border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:baseline}
+.menu li button:hover{background:var(--sky-soft)}
+.menu li small{color:var(--ink2);font-variant-numeric:tabular-nums;min-width:28px}
+.menu li.sec{font-weight:900;color:var(--sky);padding:10px 12px 2px;font-size:13px;letter-spacing:.08em}
+
+/* title slide */
+.s-title{background:linear-gradient(180deg,#1f8fe0 0%,#8fd0f5 62%,#dff0fb 100%);color:#fff;justify-content:center;align-items:flex-start}
+.s-title .kicker{color:#fff;opacity:.9}
+.s-title h1{font-size:calc(var(--u)*9);text-shadow:0 4px 0 rgba(18,38,63,.25)}
+.s-title .lead{color:#fff;font-size:calc(var(--u)*2.6);text-shadow:0 2px 0 rgba(18,38,63,.2)}
+.s-title .plane{position:absolute;right:calc(var(--u)*3);bottom:calc(var(--u)*4);width:calc(var(--u)*44);max-width:70%}
+.s-title .cloud{position:absolute;background:#fff;border-radius:99px;opacity:.85}
+@container (max-width:760px){.s-title .plane{position:relative;right:auto;bottom:auto;width:100%;max-width:100%;margin-top:auto}}
+
+/* goal + contents */
+.goal{background:var(--sun);color:var(--sun-ink);border-radius:calc(var(--u)*2);padding:calc(var(--u)*3);font-family:var(--f-head);font-size:calc(var(--u)*3.4);line-height:1.5;text-wrap:balance}
+.toc{list-style:none;margin:0;padding:0;display:grid;gap:calc(var(--u)*1.1);counter-reset:t}
+.toc li{counter-increment:t;display:flex;gap:calc(var(--u)*1.4);align-items:center;font-size:calc(var(--u)*2.5);font-weight:700;background:var(--sky-soft);border-radius:calc(var(--u)*1.2);padding:calc(var(--u)*1) calc(var(--u)*1.6)}
+.toc li::before{content:counter(t);background:var(--sky);color:#fff;border-radius:50%;width:calc(var(--u)*3.4);height:calc(var(--u)*3.4);display:grid;place-items:center;font-family:var(--f-head);flex:none}
+
+.facts{list-style:none;margin:0;padding:0;display:grid;gap:calc(var(--u)*1.1)}.facts li{display:flex;gap:calc(var(--u)*1.4);align-items:baseline;font-size:calc(var(--u)*2.2);font-weight:500;background:var(--sky-soft);border-radius:calc(var(--u)*1.2);padding:calc(var(--u)*1.1) calc(var(--u)*1.6);line-height:1.5}
+/* story */
+.bubble{background:var(--sky-soft);border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*1.6) calc(var(--u)*2);font-size:calc(var(--u)*2.1);line-height:1.55;position:relative}
+.bubble.b2{background:var(--blank-bg)}
+.bubble b{display:block;font-family:var(--f-head);font-weight:400;color:var(--sky);font-size:.9em}
+.bubble.b2 b{color:var(--sun-ink)}
+:root[data-theme="dark"] .bubble.b2 b{color:var(--sun)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bubble.b2 b{color:var(--sun)}}
+
+/* tug of war */
+.sim{flex:1;display:flex;flex-direction:column;gap:calc(var(--u)*1.2);min-width:0}
+.sim .row{display:grid;grid-template-columns:auto 1fr auto;gap:calc(var(--u)*1.2);align-items:center;font-weight:700;font-size:calc(var(--u)*1.9)}
+.sim input[type=range]{width:100%;accent-color:var(--sky);height:calc(var(--u)*2.4);min-height:28px}
+.sim .drag input{accent-color:var(--coral)}
+.sim output{font-family:var(--f-head);font-size:calc(var(--u)*2.4);min-width:2.2em;text-align:right;font-variant-numeric:tabular-nums}
+.verdict{font-family:var(--f-head);font-size:calc(var(--u)*3.2);text-align:center;border-radius:calc(var(--u)*1.4);padding:calc(var(--u)*1) calc(var(--u)*1.4);transition:background .2s}
+.verdict.stop{background:var(--coral);color:#fff}.verdict.go{background:var(--mint);color:#fff}.verdict.eq{background:var(--sun);color:var(--sun-ink)}
+.track{position:relative;height:calc(var(--u)*13);background:var(--sky-soft);border-radius:calc(var(--u)*1.4);overflow:hidden}
+.track .ground{position:absolute;left:0;right:0;bottom:0;height:22%;background:var(--line)}
+.track svg.pl{position:absolute;bottom:18%;left:4%;width:calc(var(--u)*13);transition:left .5s cubic-bezier(.3,.7,.3,1)}
+.track .arr{position:absolute;top:50%;transform:translateY(-50%);height:calc(var(--u)*3.6);display:flex;align-items:center;font-family:var(--f-head);color:#fff;font-size:calc(var(--u)*1.8);transition:width .3s}
+.track .arr.th{right:2%;background:var(--sky);justify-content:flex-end;padding-right:calc(var(--u)*1.2);clip-path:polygon(0 50%,12% 0,100% 0,100% 100%,12% 100%)}
+.track .arr.dr{left:2%;background:var(--coral);padding-left:calc(var(--u)*1.2);clip-path:polygon(0 0,88% 0,100% 50%,88% 100%,0 100%);display:none}
+.pw{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*1.4)}
+.pw .card{background:var(--sky-soft);border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*2);font-size:calc(var(--u)*2.3);line-height:1.6;font-weight:500}
+.pw .card .sym{font-family:var(--f-head);font-size:calc(var(--u)*4.4);display:block;line-height:1}
+@container (max-width:760px){.pw{grid-template-columns:1fr}}
+
+/* quick choice */
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*1.2)}
+.choices button{border:0;border-radius:calc(var(--u)*1.4);padding:calc(var(--u)*1.6);font-family:var(--f-head);font-size:calc(var(--u)*3);color:var(--on-a);min-height:44px}
+.choices button:nth-child(1){background:var(--a1)}.choices button:nth-child(2){background:var(--a2)}
+.choices button:nth-child(3){background:var(--a3)}.choices button:nth-child(4){background:var(--a4)}
+.choices button[disabled]{opacity:.4}
+.choices button.right{opacity:1;outline:5px solid var(--sun)}
+.fb{min-height:calc(var(--u)*5);font-size:calc(var(--u)*2.1);font-weight:700}
+
+/* flip cards */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(var(--u)*1.4);flex:1;min-height:0}
+@container (max-width:760px){.cards{grid-template-columns:1fr 1fr}.flip{min-height:calc(var(--u)*34)}}
+.flip{perspective:900px;background:none;border:0;padding:0;min-height:0}
+.flip>div{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.on>div{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*1.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*1);text-align:center}
+.flip .f{background:var(--sky-soft)}
+.flip .f svg{width:80%;max-height:55%}
+.flip .f b{font-family:var(--f-head);font-weight:400;font-size:calc(var(--u)*2.5)}
+.flip .f span{font-size:calc(var(--u)*1.3);color:var(--ink2)}
+.flip .b{background:var(--sky);color:#fff;transform:rotateY(180deg);font-size:calc(var(--u)*1.9);line-height:1.5;font-weight:500}
+.flip .b b{font-family:var(--f-head);font-weight:400;font-size:calc(var(--u)*2.4);color:var(--sun)}
+@media (prefers-reduced-motion:reduce){.flip>div{transition:none}}
+
+/* videos */
+.vids{display:grid;gap:calc(var(--u)*1.2);flex:1;align-content:center}
+.vid{display:flex;align-items:center;gap:calc(var(--u)*1.6);background:var(--sky-soft);border-radius:calc(var(--u)*1.4);padding:calc(var(--u)*1.4) calc(var(--u)*2);text-decoration:none;color:var(--ink);font-size:calc(var(--u)*1.9);font-weight:700;border:2px solid transparent}
+.vid:hover{border-color:var(--sky)}
+.vid .t{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink2);font-weight:500}
+.vid svg{flex:none;width:calc(var(--u)*4);height:calc(var(--u)*4)}
+
+/* checklist */
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*1.1);flex:1;align-content:center}
+@container (max-width:760px){.checks{grid-template-columns:1fr}}
+.checks label{display:flex;align-items:center;gap:calc(var(--u)*1.4);background:var(--sky-soft);border-radius:calc(var(--u)*1.2);padding:calc(var(--u)*1.3) calc(var(--u)*1.8);font-size:calc(var(--u)*2.2);font-weight:700;min-height:44px;cursor:pointer}
+.checks input{width:calc(var(--u)*2.8);height:calc(var(--u)*2.8);min-width:22px;min-height:22px;accent-color:var(--mint)}
+.checks label:has(input:checked){background:var(--mint);color:#fff}
+.checks em{font-style:normal;font-weight:500;font-size:.75em;opacity:.8;margin-left:auto}
+
+/* steps */
+.stepno{font-family:var(--f-head);background:var(--sky);color:#fff;border-radius:calc(var(--u)*1.2);padding:calc(var(--u)*.2) calc(var(--u)*1.4);font-size:calc(var(--u)*3.2);align-self:flex-start}
+.stepno small{font-size:.55em;opacity:.8}
+.step-ins{font-family:var(--f-head);font-size:calc(var(--u)*3.6);line-height:1.4;margin:0;text-wrap:balance}
+.tip{background:var(--blank-bg);border-radius:calc(var(--u)*1.2);padding:calc(var(--u)*1.1) calc(var(--u)*1.6);font-size:calc(var(--u)*1.8);font-weight:700}
+.tip::before{content:"TIP  ";color:var(--coral);font-weight:900;letter-spacing:.08em}
+.map .p{fill:var(--line);stroke:var(--ink2);stroke-width:1.5;transition:fill .3s,opacity .3s}
+.map .p.act{fill:var(--sun);stroke:var(--ink);stroke-width:2.5}
+.map .lab{font:700 14px var(--f-body);fill:var(--ink)}
+.map .ln{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.map .dim{opacity:.45}
+
+/* quiz mode */
+.quiz{position:absolute;inset:0;display:none;flex-direction:column;background:linear-gradient(160deg,#5b3fd0,#2a1a7a);color:#fff;z-index:8;padding:calc(var(--u)*2.4) calc(var(--u)*3.4);gap:calc(var(--u)*1.6);overflow:hidden}
+.quiz.on{display:flex}
+@container (max-width:760px){.quiz{overflow-y:auto;padding:calc(var(--u)*4)}}
+.quiz h2{color:#fff}
+.q-top{display:flex;align-items:center;gap:calc(var(--u)*1.4);font-weight:700;font-size:calc(var(--u)*1.8);flex-wrap:wrap}
+.q-top .pill{background:rgba(255,255,255,.16);border-radius:99px;padding:calc(var(--u)*.5) calc(var(--u)*1.5);font-variant-numeric:tabular-nums}
+.q-top .sp{flex:1}
+.timer{height:calc(var(--u)*1.1);background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;flex:none}
+.timer i{display:block;height:100%;width:100%;background:var(--sun);transform-origin:left;border-radius:99px}
+.q-text{font-family:var(--f-head);font-size:calc(var(--u)*3.4);line-height:1.35;text-align:center;text-wrap:balance;margin:0;padding:calc(var(--u)*1) 0;flex:none;min-height:calc(var(--u)*10);display:flex;align-items:center;justify-content:center}
+.ans{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*1.3);flex:1;min-height:0}
+@container (max-width:760px){.ans{grid-template-columns:1fr;flex:none}}
+.ans button{border:0;border-radius:calc(var(--u)*1.6);color:#fff;display:flex;align-items:center;gap:calc(var(--u)*1.4);padding:calc(var(--u)*1.2) calc(var(--u)*2);font-size:calc(var(--u)*2.5);font-weight:700;text-align:left;box-shadow:0 calc(var(--u)*.5) 0 rgba(0,0,0,.28);min-height:calc(var(--u)*7);transition:transform .1s,opacity .2s}
+.ans button:active{transform:translateY(3px)}
+.ans button svg{width:calc(var(--u)*3.4);height:calc(var(--u)*3.4);flex:none;fill:#fff}
+.ans button[data-c="0"]{background:var(--a1)}.ans button[data-c="1"]{background:var(--a2)}
+.ans button[data-c="2"]{background:var(--a3)}.ans button[data-c="3"]{background:var(--a4)}
+.ans.done button{opacity:.35;pointer-events:none}
+.ans.done button.right{opacity:1;outline:5px solid #fff}
+.ans.done button.mine.wrong{opacity:.6;text-decoration:line-through}
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--u)*1.6);text-align:center}
+.center .big{font-family:var(--f-head);font-size:calc(var(--u)*5.6);line-height:1.15}
+.center p{margin:0;font-size:calc(var(--u)*2.1);line-height:1.55;max-width:58ch;text-wrap:balance}
+.nick{font:inherit;font-size:calc(var(--u)*2.6);border-radius:calc(var(--u)*1.4);border:0;padding:calc(var(--u)*1.2) calc(var(--u)*2);text-align:center;width:min(100%,calc(var(--u)*34));min-height:44px;background:#fff;color:#1b1340}
+.qbtn{border:0;border-radius:calc(var(--u)*1.6);background:var(--sun);color:var(--sun-ink);font-family:var(--f-head);font-size:calc(var(--u)*2.8);padding:calc(var(--u)*1.2) calc(var(--u)*3.6);box-shadow:0 calc(var(--u)*.6) 0 #b78600;min-height:44px}
+.qbtn.ghost{background:rgba(255,255,255,.16);color:#fff;box-shadow:none;font-size:calc(var(--u)*2)}
+.res{border-radius:calc(var(--u)*1.8);padding:calc(var(--u)*2) calc(var(--u)*3);width:100%;max-width:calc(var(--u)*62);font-size:calc(var(--u)*2.1);line-height:1.6;background:rgba(255,255,255,.14)}
+.res.ok{background:rgba(22,181,122,.35)}.res.no{background:rgba(255,90,77,.35)}
+.res .hd{font-family:var(--f-head);font-size:calc(var(--u)*4.4);display:block;line-height:1.2}
+.pts{font-family:var(--f-head);color:var(--sun);font-size:calc(var(--u)*3)}
+.stars{display:flex;gap:calc(var(--u)*1);justify-content:center}
+.stars svg{width:calc(var(--u)*7);height:calc(var(--u)*7)}
+.sumgrid{display:grid;grid-template-columns:repeat(3,auto);gap:calc(var(--u)*1.4);justify-content:center}
+.sumgrid div{background:rgba(255,255,255,.14);border-radius:calc(var(--u)*1.4);padding:calc(var(--u)*1) calc(var(--u)*2.2);font-size:calc(var(--u)*1.6)}
+.sumgrid b{display:block;font-family:var(--f-head);font-weight:400;font-size:calc(var(--u)*3.4);color:var(--sun)}
+.opts{display:flex;gap:calc(var(--u)*1.4);align-items:center;font-size:calc(var(--u)*1.7);flex-wrap:wrap;justify-content:center}
+.opts input{width:calc(var(--u)*2.4);height:calc(var(--u)*2.4);min-width:22px;min-height:22px;accent-color:var(--sun)}
+.review{display:flex;gap:calc(var(--u)*.8);justify-content:center;flex-wrap:wrap}
+.review i{width:calc(var(--u)*3.2);height:calc(var(--u)*3.2);min-width:26px;min-height:26px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:calc(var(--u)*1.6)}
+.review i.ok{background:var(--mint)}.review i.no{background:var(--coral)}
+#confetti{position:absolute;inset:0;pointer-events:none;z-index:20}
+</style>
+
+<div class="app">
+  <div class="stage" id="stage">
+    <div id="slides"></div>
+    <div class="notes" id="notes"></div>
+    <section class="quiz" id="quiz" aria-live="polite"></section>
+    <canvas id="confetti"></canvas>
+  </div>
+  <div class="bar" id="bar">
+    <button class="btn" id="prev" aria-label="이전 슬라이드">◀ 이전</button>
+    <button class="btn primary" id="next" aria-label="다음 슬라이드">다음 ▶</button>
+    <div class="prog" aria-hidden="true"><i id="pbar"></i></div>
+    <span class="count" id="count">1 / 1</span>
+    <button class="btn" id="menuBtn">목차</button>
+    <button class="btn" id="noteBtn" aria-pressed="false">강의노트</button>
+    <button class="btn" id="fsBtn">전체화면</button>
+  </div>
+</div>
+<div class="menu" id="menu" role="dialog" aria-label="슬라이드 목차"><div><h3>슬라이드 목차</h3><ol id="menuList"></ol><p style="margin:14px 0 0"><button class="btn" id="menuClose">닫기</button></p></div></div>
+
+<script>
+/* ---------- tiny SVG art (original drawings) ---------- */
+const PLANE_SIDE=(c1='#fff',c2='#ff5a4d',stroke='#12263f')=>`<svg viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 62c0-14 22-22 60-22h110c26 0 48 8 52 18-4 10-26 18-52 18H80c-38 0-60-6-60-14z" fill="${c1}" stroke="${stroke}" stroke-width="4"/><path d="M190 46l22-34c4-4 12-4 12 2l-6 36z" fill="${c2}" stroke="${stroke}" stroke-width="4" stroke-linejoin="round"/><path d="M100 60l60 36c4 3 0 8-6 8h-24l-48-30z" fill="${c1}" stroke="${stroke}" stroke-width="4" stroke-linejoin="round"/><rect x="60" y="48" width="14" height="9" rx="2" fill="#8fd0f5"/><rect x="84" y="48" width="14" height="9" rx="2" fill="#8fd0f5"/><rect x="108" y="48" width="14" height="9" rx="2" fill="#8fd0f5"/><circle cx="26" cy="60" r="7" fill="${c2}" stroke="${stroke}" stroke-width="3"/></svg>`;
+const P38_TOP=`<svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g stroke="#12263f" stroke-width="4" stroke-linejoin="round"><rect x="150" y="62" width="300" height="12" rx="6" fill="#2b78c8"/><rect x="150" y="226" width="300" height="12" rx="6" fill="#2b78c8"/><path d="M60 150c14-24 62-26 120-26h30c22 0 40 10 40 26s-18 26-40 26h-30c-58 0-106-2-120-26z" fill="#6fd16a"/><path d="M190 108h130c10 0 14 12 8 22l-14 20 14 20c6 10 2 22-8 22H190c-10 0-14-10-8-20l12-22-12-22c-6-10-2-20 8-20z" fill="#3a9bea"/><path d="M420 50c30 0 52 6 52 20v8c0 8-8 10-22 10h-34z" fill="#3a9bea"/><path d="M420 250c30 0 52-6 52-20v-8c0-8-8-10-22-10h-34z" fill="#3a9bea"/><rect x="462" y="86" width="26" height="128" rx="13" fill="#3a9bea"/></g><circle cx="246" cy="150" r="3" fill="#12263f"/><path d="M262 124v52" stroke="#12263f" stroke-width="5" stroke-linecap="round"/><text x="44" y="258" font-size="18" font-family="Noto Sans KR" font-weight="700" fill="#12263f">위에서 본 P-38 (모양은 단순하게 그렸어요)</text></svg>`;
+
+/* parts map for the build steps (top view, simplified) */
+const MAP=`<svg class="map" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="부품 위치 지도">
+<rect class="p" data-p="straw" x="150" y="62" width="300" height="12" rx="6"/>
+<rect class="p" data-p="straw" x="150" y="226" width="300" height="12" rx="6"/>
+<path class="p" data-p="wing" d="M170 112h140c10 0 14 8 10 16l-10 22 10 22c4 8 0 16-10 16H170c-10 0-14-8-10-16l10-22-10-22c-4-8 0-16 10-16z" transform="translate(0 0)"/>
+<path class="p" data-p="body" d="M50 150c14-24 62-26 120-26h30c22 0 40 10 40 26s-18 26-40 26h-30c-58 0-106-2-120-26z"/>
+<path class="p" data-p="guard" d="M70 150c16-18 54-20 100-20h40v-8c-30-2-60-2-100 2-24 4-36 14-40 26z"/>
+<path class="p" data-p="guard" d="M70 150c16 18 54 20 100 20h40v8c-30 2-60 2-100-2-24-4-36-14-40-26z"/>
+<path class="p" data-p="top" d="M225 128h70c6 0 8 6 6 10l-6 12 6 12c2 4 0 10-6 10h-70c-6 0-8-6-6-10l6-12-6-12c-2-4 0-10 6-10z"/>
+<g class="p" data-p="motor"><rect class="p" data-p="motor" x="236" y="143" width="26" height="14" rx="4"/></g>
+<path class="p" data-p="prop" d="M268 120v60" stroke-width="6" stroke-linecap="round" style="fill:none"/>
+<path class="p" data-p="fin" d="M410 56c24 0 40 6 40 16v6c0 6-6 8-16 8h-24z"/>
+<path class="p" data-p="fin" d="M410 244c24 0 40-6 40-16v-6c0-6-6-8-16-8h-24z"/>
+<rect class="p" data-p="tail" x="446" y="84" width="34" height="132" rx="14"/>
+<path class="ln" d="M210 112l-22-14M210 188l-22 14" stroke-dasharray="4 4"/>
+<text class="lab" x="30" y="214">동체</text><text class="lab" x="198" y="102" dy="-2">주날개</text>
+<text class="lab" x="462" y="236" text-anchor="middle" dy="14">수평꼬리날개</text><text class="lab" x="420" y="38">수직꼬리날개</text>
+<text class="lab" x="270" y="282">빨대 2개는 날개 아래쪽에 붙어요</text>
+</svg>`;
+
+/* ---------- slide data ---------- */
+const blank=(h,a)=>`<button class="blank" data-a="${a}" aria-label="정답 확인: ${a}">${h}</button>`;
+const S=[]; // {sec,title,html,notes,cls}
+const add=(o)=>S.push(o);
+
+add({sec:'시작',title:'P-38 라이트닝',cls:'s-title',html:`
+  <div class="cloud" style="width:18%;height:6%;left:6%;top:10%"></div><div class="cloud" style="width:12%;height:5%;left:70%;top:16%"></div><div class="cloud" style="width:20%;height:5%;left:52%;top:34%"></div>
+  <div class="kicker">초등 4~6학년 · 전동 글라이더 만들기</div>
+  <h1>P-38 라이트닝</h1>
+  <p class="lead">비행기를 멈추는 힘, 항력을 알아보고<br>전동 글라이더를 만들어 날려요</p>
+  <div class="plane">${PLANE_SIDE('#fff','#ffc533')}</div>`,
+  notes:'수업 시작 인사 후 "비행기는 어떻게 멈출까요?"라고 물어 보며 시작해요. 방향키(← →)로 넘기고, N 키로 강의노트를 열 수 있어요.'});
+
+add({sec:'시작',title:'학습목표',html:`
+  <div class="kicker">학습목표</div><h2>오늘 할 일</h2>
+  <div class="body"><div class="col"><div class="goal">비행기를 멈추는 힘 <span style="background:#fff;border-radius:12px;padding:0 .3em">항력</span>에 대해 알아보고, P-38 라이트닝 전동 글라이더를 만들어요.</div></div></div>`,
+  notes:'비행기를 멈추는 힘 항력에 대해 알아보고, P-38 라이트닝 전동 글라이더를 만들어본다.'});
+
+add({sec:'시작',title:'오늘의 순서',html:`
+  <div class="kicker">Contents</div><h2>오늘의 순서</h2>
+  <div class="body"><ol class="toc" style="flex:1.2"><li>우주왕복선의 착륙</li><li>비행기를 멈추는 힘</li><li>항력의 종류</li><li>비행기의 고항력장치</li><li>P-38 라이트닝을 만들어요</li></ol>
+  <div class="fig">${P38_TOP}</div></div>`,notes:''});
+
+add({sec:'생각열기',title:'우주왕복선의 착륙',html:`
+  <div class="kicker">생각열기</div><h2>우주왕복선의 착륙</h2>
+  <div class="body"><div class="col">
+    <div class="bubble"><b>아로</b>형, TV 속 우주왕복선이 땅에 내려앉자마자 뒤에서 낙하산을 펼쳤어! 왜 낙하산을 펴?</div>
+    <div class="bubble b2"><b>형</b>항력을 크게 만들려고 펴는 거야. 그 낙하산은 <span class="hl">드래그슈트</span>라는 고항력장치야.</div>
+    <div class="bubble"><b>아로</b>그런데… 항력은 뭐고, 고항력장치는 또 뭐야?</div></div>
+    <div class="fig"><svg viewBox="0 0 400 240" aria-hidden="true"><rect x="0" y="170" width="400" height="70" fill="#9fb5c9"/><rect x="0" y="176" width="400" height="6" fill="#fff" opacity=".6"/><path d="M60 150c0-12 20-20 56-20h110c30 0 54 8 58 18l10 6c0 6-6 8-14 8H80c-14 0-20-4-20-12z" fill="#fff" stroke="#12263f" stroke-width="4"/><path d="M190 130l22-48c4-6 12-6 12 0l-4 48z" fill="#fff" stroke="#12263f" stroke-width="4" stroke-linejoin="round"/><circle cx="90" cy="168" r="8" fill="#12263f"/><circle cx="200" cy="168" r="8" fill="#12263f"/><path d="M284 150l60-34M284 156l60 14" stroke="#ff5a4d" stroke-width="2"/><ellipse cx="352" cy="144" rx="14" ry="38" fill="none" stroke="#ff5a4d" stroke-width="8"/></svg></div></div>`,
+  notes:'아로는 형과 함께 TV로 우주왕복선이 착륙하는 장면을 보고 있었어요. 우주왕복선이 땅에 내려앉는 순간 뒤쪽으로 낙하산을 펼쳤어요. 형은 "항력을 크게 만들기 위해서 펼치는 것으로, 저 낙하산은 드래그슈트라는 고항력장치야."라고 대답했어요. 그런데 항력은 뭐고 고항력장치는 또 뭘까요?'});
+
+add({sec:'생각열기',title:'드래그슈트 한눈에',html:`
+  <div class="kicker">개념열기</div><h2>착륙을 도와주는 낙하산</h2>
+  <div class="body"><div class="col"><p class="lead">우주왕복선 뒤에 달린 낙하산은 <span class="hl">드래그슈트</span>라고 불러요.</p>
+  <p class="lead">드래그슈트는 착륙할 때 <span class="hb">항력을 키워서</span> 멈추는 것을 도와주는 <span class="hl">고항력장치</span>예요.</p>
+  <p class="lead">오늘은 항력이 무엇인지, 어떤 고항력장치들이 있는지 알아봐요.</p></div>
+  <div class="fig"><svg viewBox="0 0 400 240" aria-hidden="true"><rect x="0" y="180" width="400" height="60" fill="#9fb5c9"/><path d="M40 150c0-12 20-20 56-20h110c30 0 54 8 58 18l10 6c0 6-6 8-14 8H60c-14 0-20-4-20-12z" fill="#fff" stroke="#12263f" stroke-width="4"/><path d="M170 130l22-48c4-6 12-6 12 0l-4 48z" fill="#fff" stroke="#12263f" stroke-width="4" stroke-linejoin="round"/><path d="M270 150L330 90M270 156L330 190" stroke="#ff5a4d" stroke-width="2"/><ellipse cx="338" cy="140" rx="22" ry="52" fill="#ff5a4d" stroke="#12263f" stroke-width="4"/><path d="M356 140h30" stroke="#12263f" stroke-width="3"/><path d="M380 120l12 20-12 20" fill="none" stroke="#1f8fe0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><text x="296" y="224" font-size="16" font-weight="900" fill="#12263f" font-family="Noto Sans KR">공기가 뒤에서 잡아당겨요</text></svg></div></div>`,
+  notes:'아로의 형이 알려준 것처럼 사진의 우주왕복선 뒤에 달린 낙하산은 "드래그슈트"라고 불려요. 드래그슈트는 비행기가 착륙할 때 항력을 키워서 착륙을 도와주는 고항력장치예요.'});
+
+add({sec:'항력',title:'항력이란?',html:`
+  <div class="kicker">개념설명 · 비행기를 멈추는 힘</div><h2>항력이 뭘까요?</h2>
+  <div class="body"><div class="col"><p class="lead">물체가 물이나 공기 같은 <span class="hb">유체</span>를 가로질러 움직일 때, 그 <span class="hb">운동을 방해하는 힘</span>을 ${blank('ㅎㄹ','항력')}이라고 불러요.</p>
+  <p class="small">누가 뒤에서 잡아당기는 것처럼 느껴지는 힘이에요. 다른 말로 <b>저항력</b>이라고도 해요.</p></div>
+  <div class="fig"><svg viewBox="0 0 420 240" aria-hidden="true"><g transform="translate(20 50) scale(.9)">${PLANE_SIDE('#fff','#16b57a').replace(/<svg[^>]*>|<\/svg>/g,'')}</g><path d="M250 120c40 0 60 4 90 4" stroke="#a66a2c" stroke-width="7" fill="none" stroke-linecap="round"/><ellipse cx="350" cy="124" rx="18" ry="12" fill="none" stroke="#a66a2c" stroke-width="7"/><path d="M290 40h70l-10-18m10 18l-10 18" stroke="#ff5a4d" stroke-width="0"/><g fill="#ff5a4d"><path d="M270 60h70v-16l36 28-36 28v-16h-70z"/><path d="M270 170h70v-16l36 28-36 28v-16h-70z"/></g><text x="272" y="70" font-size="17" font-weight="900" fill="#fff" font-family="Noto Sans KR">항력</text><text x="272" y="180" font-size="17" font-weight="900" fill="#fff" font-family="Noto Sans KR">항력</text></svg></div></div>`,
+  notes:'물체가 물이나 공기와 같은 유체를 가로질러 움직일 때 마치 누가 뒤에서 잡아당기는 것처럼 그 운동을 방해하는 힘을 \'항력\'이라고 불러요. 다른 말로는 저항력이라고도 불러요. (노란 칸을 눌러 정답을 확인하세요.)'});
+
+add({sec:'항력',title:'항력과 추력',html:`
+  <div class="kicker">개념설명 · 비행기를 멈추는 힘</div><h2>항력과 추력, 누가 셀까?</h2>
+  <div class="body"><div class="pw">
+   <div class="card"><span class="sym hl">항력 &gt; 추력</span>비행기가 앞으로 나아가려고 할 때, 항력이 추력보다 <span class="hl">크면</span> 비행기가 움직이지 않고 ${blank('ㅁㅊㅇ','멈춰요')}.</div>
+   <div class="card"><span class="sym hb">항력 &lt; 추력</span>비행기가 앞으로 나아가려고 할 때, 항력이 추력보다 <span class="hb">작으면</span> 비행기가 ${blank('ㅇㅈㅇㅇ','움직여요')}.</div></div></div>`,
+  notes:'추력은 비행기를 앞으로 밀어 주는 힘이에요. 항력이 추력보다 크면 비행기가 움직이지 않고 멈춰요. 항력이 추력보다 작으면 비행기가 움직여요.'});
+
+add({sec:'항력',title:'힘겨루기 실험',html:`
+  <div class="kicker">직접 해 보기</div><h2>힘겨루기 실험</h2>
+  <div class="body"><div class="sim">
+    <div class="track" id="track"><div class="ground"></div><div class="arr th" id="thA">추력</div><div class="arr dr" id="drA">항력</div><svg class="pl" id="simPl" viewBox="0 0 260 110">${PLANE_SIDE('#fff','#ff5a4d').replace(/<svg[^>]*>|<\/svg>/g,'')}</svg></div>
+    <div class="verdict eq" id="verdict">두 힘이 같아요</div></div>
+   <div class="sim">
+    <div class="row"><span class="hb">추력</span><input type="range" id="thr" min="0" max="10" value="5" aria-label="추력 크기"><output id="thrO">5</output></div>
+    <div class="row drag"><span class="hl">항력</span><input type="range" id="drg" min="0" max="10" value="5" aria-label="항력 크기"><output id="drgO">5</output></div>
+    <p class="small">막대를 움직여서 비행기가 언제 멈추고 언제 나아가는지 찾아보세요.</p></div></div>`,
+  notes:'추력 슬라이더와 항력 슬라이더를 학생이 직접 움직여 보게 해요. 항력이 더 크면 멈추고, 추력이 더 크면 나아가요. 둘이 같으면 지금 속도를 그대로 유지해요. (실험용 장면이며 숫자는 정확한 단위가 아니라 세기를 비교하기 위한 값이에요.)'});
+
+add({sec:'항력',title:'항력을 줄이는 방법',html:`
+  <div class="kicker">개념설명 · 비행기를 멈추는 힘</div><h2>항력이 줄어들면?</h2>
+  <div class="body"><div class="col"><p class="lead">항력이 줄어들면 비행기는 <span class="hb">더 빨리</span> 날 수 있고 연료도 아낄 수 있어요. 하지만 항력이 <span class="hl">전혀 없으면</span> 비행기를 멈출 수 없어요.</p>
+  <p class="lead">항력을 줄이는 대표적인 방법은 동체를 ${blank('ㅇㅅㅎ','유선형')}으로 만드는 거예요.</p>
+  <p class="small">유선형: 앞과 뒤가 가늘고 가운데가 볼록하게 둥글고 두꺼운 모양</p></div>
+  <div class="fig"><svg viewBox="0 0 400 260" aria-hidden="true"><g fill="none" stroke="#1f8fe0" stroke-width="3" stroke-linecap="round"><path d="M10 40h120M10 70h110M10 100h110M10 130h110M10 160h120M10 190h110M10 220h120" opacity=".5"/></g><rect x="150" y="60" width="70" height="140" rx="6" fill="#ff5a4d" stroke="#12263f" stroke-width="4"/><path d="M232 110c20-14 14-30 36-44M232 150c20 14 14 30 36 44M232 130c26 0 30 0 56 0" stroke="#ff5a4d" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="2 9"/><text x="185" y="238" text-anchor="middle" font-size="15" font-weight="900" fill="#12263f" font-family="Noto Sans KR">네모: 바람이 막혀요</text><path d="M296 130c20-40 60-40 90-40" stroke="none"/><ellipse cx="335" cy="130" rx="55" ry="26" fill="#16b57a" stroke="#12263f" stroke-width="4" transform="translate(0 0)"/><path d="M290 130h-20M390 130h8" stroke="#1f8fe0" stroke-width="3" opacity="0"/><text x="335" y="238" text-anchor="middle" font-size="15" font-weight="900" fill="#12263f" font-family="Noto Sans KR">유선형: 부드럽게 흘러요</text></svg></div></div>`,
+  notes:'항력이 줄어들면 비행기는 더 빨리 날 수 있고, 동시에 연료도 절약할 수 있지만 항력이 전혀 없으면 비행기를 멈출 수 없어요. 비행기의 항력을 줄이는 가장 대표적인 방법은 비행기의 동체를 \'유선형\'으로 만드는 것이에요. 유선형이란 앞과 뒤가 가늘고 가운데 부분이 볼록하게 둥글고 두꺼운 모양을 말해요. (그림은 이해를 돕기 위한 간단한 예시예요.)'});
+
+add({sec:'항력',title:'항력의 종류',html:`
+  <div class="kicker">개념설명 · 항력의 종류</div><h2>항력도 종류가 있어요</h2>
+  <div class="body"><div class="pw">
+   <div class="card"><span class="sym hb">유해항력</span>${blank('ㅇㅎㅎㄹ','유해항력')}이란 양력과 특별한 상관이 없이 <span class="hb">발생하는 항력</span>을 말해요.<br><span class="small">예: 공기와 닿아 생기는 마찰, 비행기 모양 때문에 생기는 압력 차이</span></div>
+   <div class="card"><span class="sym hl">유도항력</span>${blank('ㅇㄷㅎㄹ','유도항력')}이란 비행기가 하늘을 날 때 <span class="hl">와류</span>로 인해 생기는 항력을 말해요.<br><span class="small">와류: 날개 끝에서 공기가 소용돌이 모양으로 도는 흐름</span></div></div></div>`,
+  notes:'항력은 상황이나 생기는 부위에 따라 여러 가지 종류로 나눌 수 있어요. 유해항력에는 압력항력(주변의 압력에 의해 생기는 항력), 마찰항력(마찰 때문에 생기는 항력), 조파항력(충격파에 의해 생기는 항력), 간섭항력(부품의 이음새에서 생기는 항력), 트림항력(항공기의 조종면(승강타, 방향타 등)에서 생기는 항력)이 있어요. 유도항력은 비행기 날개의 끝이 공기를 가르며 생기는 소용돌이 모양의 와류로 인해 생기는 항력을 말해요.'});
+
+add({sec:'항력',title:'잠깐 퀴즈!',html:`
+  <div class="kicker">잠깐 퀴즈!</div><h2>어떤 힘이 가장 크게 작용해야 할까요?</h2>
+  <p class="lead">항공기의 속도를 <span class="hl">줄이거나 멈추기 위해서는</span> 항공기에 작용하는 4가지 힘 중 어떤 힘이 가장 크게 작용해야 할까요?</p>
+  <div class="choices" id="q4f"><button data-r="0">양력</button><button data-r="1" data-ok="1">항력</button><button data-r="2">중력</button><button data-r="3">추력</button></div>
+  <div class="fb" id="q4fb" aria-live="polite"></div>`,
+  notes:'정답은 항력이에요. 비행기에는 양력(위로 뜨는 힘), 중력(아래로 당기는 힘), 추력(앞으로 미는 힘), 항력(뒤로 잡아당기는 힘) 네 가지 힘이 작용해요.'});
+
+add({sec:'고항력장치',title:'고항력장치란?',html:`
+  <div class="kicker">개념열기 · 비행기의 고항력장치</div><h2>고항력장치</h2>
+  <div class="body"><div class="col"><p class="lead">비행기에는 <span class="hb">항력을 키워</span> 비행기가 멈추는 것을 도와주는 <span class="hl">고항력장치</span>가 있어요.</p>
+  <p class="small">일부러 항력을 크게 만들어 속도를 줄이고, 달리는 거리(활주거리)를 짧게 하는 장치예요. 비행기 종류에 따라 없는 경우도, 여러 개 있는 경우도 있어요.</p></div>
+  <div class="fig">${PLANE_SIDE('#fff','#1f8fe0')}</div></div>`,
+  notes:'비행기에는 항력을 키워 비행기가 멈추는 것을 도와주는 고항력장치가 있어요. 인위적으로 항력을 크게 만들어 속도를 줄이고, 활주거리를 단축하는 장치이지요. (비행기의 종류나 용도에 따라 고항력장치가 없는 경우도, 여러 개 있는 경우도 있어요.)'});
+
+const DEV={
+ chute:{t:'드래그슈트',h:'ㄷㄹㄱㅅㅌ',role:'착륙할 때 낙하산을 펼쳐 공기저항을 크게 만들어요.',n:'비행기뿐 아니라 레이싱카처럼 빠르게 움직이는 자동차에서도 사용해요.',pos:'꼬리 뒤',svg:`<svg viewBox="0 0 220 120" aria-hidden="true"><path d="M20 70c0-8 14-14 40-14h60c18 0 30 6 32 12l6 4c0 4-4 6-10 6H34c-10 0-14-4-14-8z" fill="#fff" stroke="#12263f" stroke-width="3"/><path d="M150 70l36-22M150 74l36 20" stroke="#ff5a4d" stroke-width="2"/><ellipse cx="190" cy="70" rx="12" ry="32" fill="#ffc533" stroke="#12263f" stroke-width="3"/></svg>`},
+ rev:{t:'역추진장치',h:'ㅇㅊㅈㅈㅊ',role:'제트엔진의 추력을 반대로 돌려서 속도를 줄여요.',n:'엔진에서 나오는 바람이 앞쪽으로 향하게 해서 비행기를 뒤로 밀어 줘요.',pos:'엔진',svg:`<svg viewBox="0 0 220 120" aria-hidden="true"><path d="M20 70c0-8 14-14 40-14h90c18 0 30 6 32 12l6 4c0 4-4 6-10 6H34c-10 0-14-4-14-8z" fill="#fff" stroke="#12263f" stroke-width="3"/><rect x="120" y="46" width="42" height="16" rx="8" fill="#9fb5c9" stroke="#12263f" stroke-width="3"/><path d="M118 40l-30-14M118 70l-30 14" stroke="#1f8fe0" stroke-width="5" stroke-linecap="round"/></svg>`},
+ spoil:{t:'스포일러',h:'ㅅㅍㅇㄹ',role:'플랩의 앞쪽에 있는 고항력장치로, 착륙할 때 펼쳐 공기저항을 키워요.',n:'날개 위판을 들어 올려 공기 흐름을 깨뜨리고 강한 항력을 만들어요.',pos:'날개 위',svg:`<svg viewBox="0 0 220 120" aria-hidden="true"><path d="M10 90l190-24v12L10 100z" fill="#fff" stroke="#12263f" stroke-width="3" stroke-linejoin="round"/><path d="M100 82l22-34 10 6-14 28z" fill="#ffc533" stroke="#12263f" stroke-width="3" stroke-linejoin="round"/><path d="M96 40c-6-12 6-22 14-10" fill="none" stroke="#1f8fe0" stroke-width="4" stroke-linecap="round"/></svg>`},
+ air:{t:'에어브레이크',h:'ㅇㅇㅂㄹㅇㅋ',role:'옆으로 쫙 펼쳐서 공기의 저항을 키워요.',n:'P-38 라이트닝도 항공 역사에서 이 장치의 필요성을 보여 준 비행기 중 하나예요.',pos:'동체 뒤쪽',svg:`<svg viewBox="0 0 220 120" aria-hidden="true"><path d="M110 18v84" stroke="#12263f" stroke-width="12" stroke-linecap="round"/><path d="M104 54H40v12h64M116 54h64v12h-64" fill="#ffc533" stroke="#12263f" stroke-width="3" stroke-linejoin="round"/></svg>`}};
+for(const k of ['chute','rev','spoil','air']){const d=DEV[k];
+ add({sec:'고항력장치',title:d.t,html:`
+  <div class="kicker">개념설명 · 비행기의 고항력장치</div><h2>${d.t}</h2>
+  <div class="body"><div class="col"><p class="lead">${blank(d.h,d.t)}는 <span class="hb">${d.role}</span> 그래서 <span class="hl">고항력장치</span>라고 해요.</p><p class="small">${d.n}</p><p class="small">붙어 있는 곳: ${d.pos}</p></div><div class="fig">${d.svg}</div></div>`,
+  notes:`'${d.t}'는 ${d.role} ${d.n}`});}
+
+add({sec:'고항력장치',title:'고항력장치 4총사',html:`
+  <div class="kicker">정리하기</div><h2>카드를 눌러 설명을 확인해요</h2>
+  <div class="cards">${['chute','rev','spoil','air'].map(k=>`<button class="flip" aria-label="${DEV[k].t} 카드 뒤집기"><div><span class="f">${DEV[k].svg}<b>${DEV[k].t}</b><span>눌러서 뒤집기</span></span><span class="b"><b>${DEV[k].t}</b>${DEV[k].role}</span></div></button>`).join('')}</div>`,
+  notes:'네 가지 고항력장치를 학생들이 카드를 뒤집어 가며 말로 설명해 보게 해요.'});
+
+add({sec:'고항력장치',title:'영상으로 보기',html:`
+  <div class="kicker">영상시청</div><h2>실제 착륙 영상 보기</h2>
+  <div class="vids">
+   ${[['F-16의 착륙 (드래그슈트)','https://www.youtube.com/watch?v=zDKTKsPEPag','00:51'],['비행기의 착륙 (스포일러 & 역추진장치)','https://www.youtube.com/watch?v=_VKDv2lP6sI','00:33'],['교사용: 비행기는 후진할 수 있을까? 역추력 장치 설명','https://www.youtube.com/watch?v=3etQXjIpHbM&t=51s','04:21'],['교사용: 레이싱카가 멈출 때 드래그슈트 사용','https://www.youtube.com/watch?v=nywAZRYP9V8','01:09']].map(v=>`<a class="vid" href="${v[1]}" target="_blank" rel="noopener"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#ff5a4d"/><path d="M15 11l16 9-16 9z" fill="#fff"/></svg><span>${v[0]}</span><span class="t">${v[2]}</span></a>`).join('')}
+  </div><p class="small">영상은 새 탭에서 열려요.</p>`,
+  notes:'자료의 영상 링크예요. 수업 전에 미리 재생이 되는지 확인해 주세요. 인천공항 착륙 영상(07:01)도 있으니 시간이 되면 보여 주세요: https://www.youtube.com/watch?v=FkHyaFTmT88'});
+
+add({sec:'만들기',title:'오늘의 KIT: P-38',html:`
+  <div class="kicker">개념설명 · 오늘의 KIT</div><h2>오늘의 KIT는 P-38 라이트닝</h2>
+  <div class="body"><div class="col">
+   <ul class="facts"><li><b style="font-family:var(--f-head);font-size:1.3em;color:var(--sky)">P</b> Pursuit, 추격기(전투기)라는 뜻이에요.</li>
+   <li><b style="font-family:var(--f-head);font-size:1.3em;color:var(--coral)">38</b> 추격기 사업에서 38번째로 뽑힌 모델이에요.</li>
+   <li><b style="font-family:var(--f-head);font-size:1.3em;color:var(--mint)">Lightning</b> '번개'라는 별명이에요.</li></ul></div>
+   <div class="fig">${P38_TOP}</div></div>`,
+  notes:'P (Pursuit): \'추격기(전투기)\'를 뜻하는 단어로, 당시 미군이 전투기 체계에 사용하던 기호예요(이후 P 대신 F-Fight를 사용하게 됨). 38: 추격기 사업에서 채택된 38번째 모델이라는 순번이에요. Lightning: 제조사인 록히드사와 영국 공군이 붙인 별명으로 \'번개\'를 의미해요. 이 비행기는 몸통이 두 개(쌍동체)인 모양이 특징이에요.'});
+
+add({sec:'만들기',title:'P-38과 에어브레이크',html:`
+  <div class="kicker">알아두기</div><h2>P-38과 고항력장치</h2>
+  <div class="body"><div class="col"><p class="lead">P-38은 비행기 역사에서 <span class="hl">고항력장치(에어브레이크)</span>가 왜 필요한지 분명하게 보여 준 비행기 중 하나예요.</p>
+  <p class="lead">빠르게 아래로 내려갈 때 이 장치를 펼치면 항력이 갑자기 커져서 <span class="hb">속도를 제한</span>할 수 있어요.</p></div>
+  <div class="fig">${P38_TOP}</div></div>`,
+  notes:'P-38은 항공 역사상 고항력장치(에어브레이크)의 필요성을 명확히 입증한 기체 중 하나예요. 급강하 시 이 장치를 펼치면 순수 항력을 급증시켜 기체 속도를 제한하고, 동시에 날개 표면의 공기 흐름을 바꿔 양력 중심을 정상화함으로써 조종사가 기수를 다시 들 수 있게 만들어 주었어요. 즉, P-38은 초음속 비행 시대 전 단계에서 속도 제어를 위한 고항력장치의 중요성을 보여준 대표 사례입니다.'});
+
+add({sec:'만들기',title:'제작 전 주의사항',html:`
+  <div class="kicker">제작하기</div><h2>만들기 전에 꼭 기억해요</h2>
+  <div class="body"><div class="col"><p class="lead">우드락 본드는 손에 묻어도 괜찮지만 <span class="hl">옷에 묻으면 떼어내기 힘들어요.</span> 반드시 <span class="hl">종이 위에서</span> 본드칠을 해요.</p>
+  <p class="lead">본드를 너무 많이 짜지 말고 <span class="hl">조금만 짠 후</span> 문지르세요.</p>
+  <p class="small">모터와 프로펠러가 붙은 뒤에는 프로펠러에 손이나 얼굴을 가까이 대지 않아요.</p></div></div>`,
+  notes:'주의 사항을 꼭 숙지시켜 주세요. (마지막 줄의 프로펠러 안전 안내는 수업 편의를 위해 덧붙인 내용이에요.)'});
+
+add({sec:'만들기',title:'재료 확인',html:`
+  <div class="kicker">제작하기 · 0/11</div><h2>재료를 확인해요</h2>
+  <div class="checks">
+   <label><input type="checkbox">모터 + 콘덴서</label><label><input type="checkbox">빨대 <em>2개</em></label>
+   <label><input type="checkbox">동체 <em>초록색</em></label><label><input type="checkbox">주날개</label>
+   <label><input type="checkbox">수평 꼬리날개</label><label><input type="checkbox">수직 꼬리날개 <em>2개</em></label>
+   <label><input type="checkbox">윗조각</label><label><input type="checkbox">가드 <em>2개</em></label>
+   <label><input type="checkbox">우드락 본드</label><label><input type="checkbox">테이프와 가위</label></div>
+  <p class="small">칸을 눌러 가며 하나씩 확인해요. (본드·테이프·가위는 수업 준비물로 따로 챙겨요.)</p>`,
+  notes:'키트 구성: 모터+콘덴서, 빨대, 동체(초록), 주날개, 수평꼬리날개, 윗조각, 가드 2개, 수직꼬리날개 2개. 본드·테이프·가위는 교실에서 준비해 주세요.'});
+
+const STEPS=[
+ {t:'빨대의 주름 부분을 잘라내요.',a:['straw'],tip:'가위로 주름(쭈글쭈글한 부분)만 쏙 잘라요.'},
+ {t:'동체에 모터를 조립하고, 콘덴서에 전선을 감아 길이를 조절한 뒤 테이프로 고정해요.',a:['body','motor','prop'],tip:'전선이 프로펠러에 닿지 않게 테이프로 잘 붙여요.'},
+ {t:'가드에 본드를 살짝 발라서 동체 양쪽에 고정해요.',a:['guard','body'],tip:'본드는 종이 위에서, 조금만!'},
+ {t:'주날개와 수평·수직 꼬리날개의 접히는 부분을 테이프로 보강해요.',a:['wing','tail','fin'],tip:'접히는 줄 위에 테이프를 붙이면 튼튼해져요.'},
+ {t:'윗조각에 본드를 살짝 발라 주날개에 고정해요.',a:['top','wing']},
+ {t:'조립된 주날개에 본드를 살짝 발라 동체에 고정해요.',a:['wing','body']},
+ {t:'수직 꼬리날개와 주날개를 조립해요.',a:['fin','wing']},
+ {t:'수평 꼬리날개를 수직 꼬리날개 뒷부분에 조립해요.',a:['tail','fin']},
+ {t:'글라이더 아래쪽에서 빨대를 테이프로 고정해요.',a:['straw'],tip:'빨대는 날개 아래쪽(뒤집었을 때 위)에 붙여요.'},
+ {t:'빨대와 결합 부분에 본드를 살짝 발라 고정해요.',a:['straw','wing','fin']},
+ {t:'주날개와 꼬리날개를 살짝 접어 주세요.',a:['wing','tail'],tip:'날개를 위쪽으로 살짝 꺾어 상반각을 만들어요.'}];
+STEPS.forEach((s,i)=>add({sec:'만들기',title:`만들어봐요 ${i+1}/11`,steps:true,html:`
+  <div class="kicker">제작하기</div>
+  <div class="body"><div class="col"><div class="stepno">${i+1}<small> / 11</small></div><p class="step-ins">${s.t}</p>${s.tip?`<div class="tip">${s.tip}</div>`:''}</div>
+  <div class="fig" data-act="${s.a.join(',')}">${MAP}</div></div>`,
+  notes:s.t+' (부품 위치 그림은 이해를 돕기 위한 단순한 지도예요. 노란색이 이번 단계에서 쓰는 부분이에요.)'}));
+
+add({sec:'만들기',title:'상반각 만들기',html:`
+  <div class="kicker">제작하기 · 11+/11</div><h2>꼭!!! 날개를 위로 꺾어요</h2>
+  <div class="body"><div class="col"><p class="lead">이 전동글라이더는 <span class="hl">주날개를 위쪽으로 꺾어서 상반각</span>을 만들어야 하늘을 잘 날아요.</p>
+  <div class="tip">접어도 계속 풀어진다면, 접은 뒤 그 위쪽으로 테이프를 길게 다시 붙여요.</div></div>
+  <div class="fig"><svg viewBox="0 0 400 200" aria-hidden="true"><path d="M200 150L40 90M200 150L360 90" stroke="#12263f" stroke-width="14" stroke-linecap="round"/><path d="M200 150L40 90M200 150L360 90" stroke="#3a9bea" stroke-width="8" stroke-linecap="round"/><circle cx="200" cy="150" r="10" fill="#6fd16a" stroke="#12263f" stroke-width="3"/><path d="M60 150h280" stroke="#ff5a4d" stroke-width="3" stroke-dasharray="6 6"/><path d="M80 120c-10 6-14 16-14 28M320 120c10 6 14 16 14 28" stroke="#ffc533" stroke-width="5" fill="none" stroke-linecap="round"/><text x="200" y="186" text-anchor="middle" font-size="15" font-weight="900" fill="#12263f" font-family="Noto Sans KR">앞에서 본 모습: 날개 끝이 위로 올라가요 (V자)</text></svg></div></div>`,
+  notes:'이 전동글라이더는 꼭!!! 주날개를 위쪽으로 꺾어서 상반각을 만들어줘야 하늘을 잘 날아요. 만약 계속 접어 올려도 상반각이 풀어진다면 접은 후 그 위쪽으로 다시 테이프를 길게 붙여주세요.'});
+
+add({sec:'만들기',title:'완성! 날려보기',html:`
+  <div class="kicker">완성 · 날려보기</div><h2>완성! 함께 날려봐요</h2>
+  <div class="body"><div class="col"><div class="goal" style="font-size:calc(var(--u)*4)">누가 가장 멀리 날릴까요?</div><p class="small">글라이더가 잘 날지 않으면 승강타와 방향타, 에일러론(날개 뒤쪽 조종면)의 각도를 조금씩 바꿔서 잘 날 수 있도록 조정해요.</p></div>
+  <div class="fig">${P38_TOP}</div></div>`,
+  notes:'자유롭게 날릴 수 있도록 지도해 주세요. 글라이더가 잘 날지 않으면 승강타와 방향타, 에일러론의 각도를 변화시켜 잘 날 수 있도록 조정해 주세요. 날리기 전에 주변에 사람이 없는지 확인하도록 안내해 주세요.'});
+
+add({sec:'퀴즈',title:'퀴즈 타임',quizEntry:true,html:`<div class="center"><div class="kicker">수업 끝!</div><div class="big">퀴즈 타임</div><p>오늘 배운 내용으로 6문제를 풀어요. 빠르고 정확할수록 점수가 높아져요.</p><button class="qbtn" id="startQuiz">퀴즈 시작</button></div>`,
+  notes:'퀴즈 시작 버튼을 누르면 퀴즈앤(Quizizz) 같은 게임 화면으로 바뀌어요. 시간 제한은 시작 화면에서 끌 수 있어요. 키보드 1~4 키로도 답할 수 있어요.'});
+
+/* ---------- render deck ---------- */
+const $=s=>document.querySelector(s);
+const slidesEl=$('#slides');
+S.forEach((s,i)=>{const el=document.createElement('section');el.className='slide '+(s.cls||'');el.dataset.i=i;el.innerHTML=s.html;slidesEl.appendChild(el);});
+const slideEls=[...slidesEl.children];
+let cur=0;
+const notesEl=$('#notes'),stage=$('#stage');
+function go(n,fromHash){
+  if(n<0||n>=S.length)return;
+  cur=n;slideEls.forEach((e,i)=>e.classList.toggle('on',i===n));
+  notesEl.innerHTML=S[n].notes?`<b>강의노트</b>${S[n].notes}`:`<b>강의노트</b>이 슬라이드는 따로 적은 노트가 없어요.`;
+  $('#count').textContent=`${n+1} / ${S.length}`;
+  $('#pbar').style.width=((n+1)/S.length*100)+'%';
+  $('#prev').disabled=n===0;$('#next').disabled=n===S.length-1;
+  const sl=slideEls[n];if(sl.scrollTo)sl.scrollTo(0,0);
+  const act=sl.querySelector('[data-act]');
+  if(act){const on=act.dataset.act.split(',');act.querySelectorAll('.p').forEach(p=>{const a=on.includes(p.dataset.p);p.classList.toggle('act',a);p.classList.toggle('dim',!a)});}
+  if(!fromHash){try{history.replaceState(null,'','#s'+(n+1))}catch(e){}}
+}
+$('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
+$('#noteBtn').onclick=e=>{const on=stage.classList.toggle('shownotes');e.currentTarget.setAttribute('aria-pressed',on)};
+$('#fsBtn').onclick=()=>{try{const r=document.documentElement.requestFullscreen?.();r&&r.catch(()=>{})}catch(e){}};
+/* menu */
+const menu=$('#menu');let lastSec='';
+$('#menuList').innerHTML=S.map((s,i)=>{let h='';if(s.sec!==lastSec){h=`<li class="sec">${s.sec}</li>`;lastSec=s.sec}return h+`<li><button data-g="${i}"><small>${i+1}</small>${s.title}</button></li>`}).join('');
+$('#menuBtn').onclick=()=>menu.classList.add('on');$('#menuClose').onclick=()=>menu.classList.remove('on');
+menu.onclick=e=>{const b=e.target.closest('[data-g]');if(b){go(+b.dataset.g);menu.classList.remove('on')}else if(e.target===menu)menu.classList.remove('on')};
+/* keyboard */
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input[type=text]'))return;
+  if(quizOn){const n=+e.key;if(n>=1&&n<=4)answerBtn(n-1);else if(e.key==='Enter'||e.key===' ')return;return;}
+  if(e.target.matches('input[type=range]')&&(e.key==='ArrowLeft'||e.key==='ArrowRight'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){go(cur+1)}else if(e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1)}
+  else if(e.key==='n'||e.key==='N'){$('#noteBtn').click()}
+  else if(e.key==='Escape'){menu.classList.remove('on')}
+});
+/* swipe */
+let tx=null;stage.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+stage.addEventListener('touchend',e=>{if(tx==null||quizOn)return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>70)go(cur+(d<0?1:-1));tx=null});
+/* blanks */
+slidesEl.addEventListener('click',e=>{const b=e.target.closest('.blank');if(b){b.classList.toggle('open');b.textContent=b.classList.contains('open')?b.dataset.a:b.dataset.h||b.dataset.a;}
+  const f=e.target.closest('.flip');if(f)f.classList.toggle('on');});
+document.querySelectorAll('.blank').forEach(b=>{b.dataset.h=b.textContent});
+/* quick quiz */
+$('#q4f').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const ok=!!b.dataset.ok;
+  document.querySelectorAll('#q4f button').forEach(x=>{x.disabled=!x.dataset.ok&&x!==b;if(x.dataset.ok)x.classList.add('right')});
+  $('#q4fb').innerHTML=ok?'<span class="hb">정답! 멈추려면 항력이 가장 커야 해요.</span>':'<span class="hl">아쉬워요. 정답은 항력이에요.</span>';if(ok)burst();});
+/* tug of war */
+const thr=$('#thr'),drg=$('#drg');
+function sim(){const t=+thr.value,d=+drg.value;$('#thrO').textContent=t;$('#drgO').textContent=d;
+  const v=$('#verdict'),pl=$('#simPl'),ta=$('#thA');
+  ta.style.width=(12+t*5)+'%';
+  if(d>t){v.className='verdict stop';v.textContent='항력이 더 커요: 비행기가 멈춰요';pl.style.left='4%'}
+  else if(d<t){v.className='verdict go';v.textContent='추력이 더 커요: 비행기가 나아가요';pl.style.left=(10+(t-d)*5.2)+'%'}
+  else{v.className='verdict eq';v.textContent='두 힘이 같아요: 지금 속도 그대로예요';pl.style.left='28%'}}
+thr.oninput=drg.oninput=sim;sim();
+
+/* ---------- confetti ---------- */
+const cv=$('#confetti'),cx=cv.getContext('2d');let parts=[],raf=0;
+function burst(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const r=stage.getBoundingClientRect();cv.width=r.width;cv.height=r.height;
+  const cols=['#ffc533','#ff5a4d','#1f8fe0','#16b57a','#fff'];
+  parts=Array.from({length:70},()=>({x:r.width/2,y:r.height*.55,vx:(Math.random()-.5)*14,vy:-Math.random()*13-3,s:5+Math.random()*7,c:cols[Math.random()*5|0],a:Math.random()*6,l:70+Math.random()*30}));
+  cancelAnimationFrame(raf);(function f(){cx.clearRect(0,0,cv.width,cv.height);parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.45;p.a+=.2;p.l--;cx.save();cx.translate(p.x,p.y);cx.rotate(p.a);cx.fillStyle=p.c;cx.globalAlpha=Math.max(0,p.l/40);cx.fillRect(-p.s/2,-p.s/3,p.s,p.s*.6);cx.restore()});parts=parts.filter(p=>p.l>0);if(parts.length)raf=requestAnimationFrame(f);else cx.clearRect(0,0,cv.width,cv.height)})()}
+
+/* ---------- sound ---------- */
+let actx=null,muted=false;
+function tone(f,d,type='sine',v=.12,delay=0){if(muted)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const t=actx.currentTime+delay,o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(actx.destination);o.start(t);o.stop(t+d)}catch(e){}}
+const sfx={ok(){tone(660,.15);tone(880,.2,'sine',.12,.12);tone(1100,.25,'sine',.1,.26)},no(){tone(220,.3,'sawtooth',.08);tone(160,.35,'sawtooth',.08,.2)},tick(){tone(900,.05,'square',.04)},start(){tone(523,.12);tone(659,.12,'sine',.12,.12);tone(784,.25,'sine',.12,.24)}};
+
+/* ---------- Quizizz-style quiz ---------- */
+const SHAPES=['<svg viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/></svg>','<svg viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg>','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>','<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>'];
+const Q=[
+ {q:'물체가 공기 같은 유체를 가로질러 움직일 때, 그 움직임을 방해하는 힘은 무엇일까요?',o:['항력','양력','중력','추력'],a:0,e:'항력은 비행기를 뒤에서 잡아당기듯 움직임을 방해하는 힘이에요. 저항력이라고도 해요.'},
+ {q:'비행기가 앞으로 나아가려고 할 때, 항력이 추력보다 크면 어떻게 될까요?',o:['움직이지 않고 멈춰요','더 빨리 날아요','하늘로 높이 떠올라요','뒤로 날아가요'],a:0,e:'항력이 추력보다 크면 앞으로 나아가지 못하고 멈춰요. 항력이 추력보다 작으면 나아가요.'},
+ {q:'비행기의 항력을 줄이는 가장 대표적인 방법은 동체를 어떤 모양으로 만드는 걸까요?',o:['네모난 상자 모양','유선형','납작한 판 모양','뾰족뾰족한 별 모양'],a:1,e:'유선형은 앞뒤가 가늘고 가운데가 볼록해서 공기가 부드럽게 흘러가요. 그래서 항력이 줄어요.'},
+ {q:'착륙할 때 비행기 뒤에서 낙하산을 펼쳐 공기저항을 키우는 고항력장치의 이름은?',o:['스포일러','역추진장치','드래그슈트','에어브레이크'],a:2,e:'우주왕복선과 전투기, 레이싱카도 드래그슈트로 속도를 줄여요.'},
+ {q:'오늘 만든 P-38 "라이트닝(Lightning)"은 무슨 뜻일까요?',o:['폭풍','번개','구름','바람'],a:1,e:'Lightning은 번개라는 뜻의 별명이에요. P는 추격기, 38은 38번째 모델이라는 뜻이에요.'},
+ {q:'고항력장치에 대한 설명으로 틀린 것을 고르세요.',o:['역추진장치는 제트엔진의 추력을 반대로 해서 속도를 줄여요','드래그슈트는 착륙할 때 항력을 키워 줘요','항력을 줄이면 비행기는 더 빨리 날 수 있어요','항력이 하나도 없어도 비행기를 잘 멈출 수 있어요'],a:3,wrong:true,e:'항력이 전혀 없으면 비행기를 멈출 수 없어요. 그래서 착륙할 때는 고항력장치로 항력을 키워요.'}];
+const TIME=20;
+let quizOn=false,qi=0,score=0,streak=0,best=0,right=0,results=[],t0=0,timerId=0,locked=false,order=[],useTimer=true,name='';
+const qz=$('#quiz');
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+function showQuiz(h){qz.innerHTML=h}
+function quizIntro(){quizOn=true;qz.classList.add('on');
+  showQuiz(`<div class="center"><div class="kicker" style="color:#ffd25a">QUIZ</div><div class="big">P-38 항력 퀴즈</div><p>6문제 · 문제마다 ${TIME}초 · 정답을 빨리 누를수록 점수가 높아져요!</p>
+   <input class="nick" id="nick" type="text" maxlength="10" placeholder="내 이름(별명)을 적어요" aria-label="이름 입력" autocomplete="off">
+   <div class="opts"><label><input type="checkbox" id="useT" checked> 시간 제한 켜기</label><label><input type="checkbox" id="mute"> 소리 끄기</label></div>
+   <button class="qbtn" id="go">시작!</button><button class="qbtn ghost" id="exitQ">수업 화면으로 돌아가기</button></div>`);
+  $('#go').onclick=()=>{name=($('#nick').value||'').trim()||'조종사';useTimer=$('#useT').checked;muted=$('#mute').checked;sfx.start();
+    qi=0;score=0;streak=0;best=0;right=0;results=[];showQ()};
+  $('#exitQ').onclick=quizExit;$('#nick').addEventListener('keydown',e=>{if(e.key==='Enter')$('#go').click()});
+}
+function quizExit(){quizOn=false;clearInterval(timerId);qz.classList.remove('on')}
+function showQ(){const q=Q[qi];locked=false;
+  order=shuffle([0,1,2,3]);// order[k] = original option index shown at position k
+  showQuiz(`<div class="q-top"><span class="pill">${qi+1} / ${Q.length}</span><span class="pill">${name}</span><span class="sp"></span><span class="pill">연속 정답 ${streak}</span><span class="pill">${score}점</span></div>
+   ${useTimer?'<div class="timer" aria-hidden="true"><i id="tbar"></i></div>':''}
+   <h2 class="q-text">${q.wrong?'<span style="color:#ffd25a">틀린 것</span>을 고르세요.':q.q}</h2>
+   ${q.wrong?'<p class="small" style="color:#fff;text-align:center;margin:0">고항력장치에 대한 설명 중에서요.</p>':''}
+   <div class="ans" id="ans">${order.map((o,k)=>`<button data-c="${k}" data-k="${k}">${SHAPES[k]}<span>${q.o[o]}</span></button>`).join('')}</div>`);
+  $('#ans').onclick=e=>{const b=e.target.closest('button');if(b)answerBtn(+b.dataset.k)};
+  t0=performance.now();clearInterval(timerId);
+  if(useTimer){const bar=$('#tbar');timerId=setInterval(()=>{const left=Math.max(0,TIME-(performance.now()-t0)/1000);bar.style.transform=`scaleX(${left/TIME})`;if(left<=5&&left>0&&Math.abs(left-Math.round(left))<.06)sfx.tick();if(left<=0){clearInterval(timerId);answerBtn(-1)}},60)}
+}
+function answerBtn(k){if(!quizOn||locked||!$('#ans'))return;locked=true;clearInterval(timerId);
+  const q=Q[qi],picked=k<0?-1:order[k],ok=picked===q.a,el=(performance.now()-t0)/1000;
+  let gain=0;if(ok){const f=useTimer?Math.max(0,1-el/TIME):.5;gain=600+Math.round(400*f);streak++;best=Math.max(best,streak);if(streak>=2)gain+=Math.min(300,(streak-1)*100);score+=gain;right++;}else streak=0;
+  results.push(ok);
+  const ans=$('#ans');ans.classList.add('done');ans.querySelectorAll('button').forEach((b,i)=>{if(order[i]===q.a)b.classList.add('right');if(i===k){b.classList.add('mine');if(!ok)b.classList.add('wrong')}});
+  ok?sfx.ok():sfx.no();if(ok)burst();
+  setTimeout(()=>{showQuiz(`<div class="q-top"><span class="pill">${qi+1} / ${Q.length}</span><span class="pill">${name}</span><span class="sp"></span><span class="pill">${score}점</span></div>
+   <div class="center"><div class="res ${ok?'ok':'no'}"><span class="hd">${k<0?'시간 끝!':ok?'정답이에요!':'아쉬워요!'}</span>
+   ${ok?`<span class="pts">+${gain}점</span>${streak>=2?` · 연속 정답 ${streak}번째!`:''}<br>`:`정답: <b>${q.o[q.a]}</b><br>`}${q.e}</div>
+   <button class="qbtn" id="nx">${qi===Q.length-1?'결과 보기':'다음 문제'}</button></div>`);
+   $('#nx').onclick=()=>{qi++;qi<Q.length?showQ():finish()};$('#nx').focus()},ok?650:900);
+}
+function finish(){sfx.start();if(right>=4)burst();
+  const title=right===6?'항력 마스터 조종사':right>=4?'에이스 파일럿':right>=2?'견습 파일럿':'지상 정비사';
+  const star=n=>`<svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7.2L12 17.8 5.6 21.5l1.7-7.2L2 9.6 9 9z" fill="${n?'#ffc533':'rgba(255,255,255,.25)'}"/></svg>`;
+  const nStars=right>=5?3:right>=3?2:right>=1?1:0;
+  showQuiz(`<div class="center"><div class="kicker" style="color:#ffd25a">${name} 조종사의 결과</div><div class="big">${title}</div>
+   <div class="stars" role="img" aria-label="별 ${nStars}개">${star(nStars>0)}${star(nStars>1)}${star(nStars>2)}</div>
+   <div class="sumgrid"><div><b>${score}</b>점수</div><div><b>${right}/${Q.length}</b>정답</div><div><b>${best}</b>최고 연속</div></div>
+   <div class="review" aria-label="문제별 결과">${results.map((r,i)=>`<i class="${r?'ok':'no'}">${i+1}</i>`).join('')}</div>
+   <p>${right===6?'모든 문제를 맞혔어요! 항력 박사님이네요.':right>=4?'아주 잘했어요! 틀린 문제는 슬라이드에서 다시 확인해 봐요.':'괜찮아요. 슬라이드를 다시 보고 한 번 더 도전해요!'}</p>
+   <button class="qbtn" id="again">다시 도전</button><button class="qbtn ghost" id="exitQ">수업 화면으로 돌아가기</button></div>`);
+  $('#again').onclick=quizIntro;$('#exitQ').onclick=quizExit;}
+document.addEventListener('click',e=>{if(e.target.id==='startQuiz')quizIntro()});
+
+/* start */
+const h=parseInt((location.hash||'').replace('#s',''),10);go(h>=1&&h<=S.length?h-1:0,true);
+window.addEventListener('hashchange',()=>{const n=parseInt(location.hash.replace('#s',''),10);if(n>=1&&n<=S.length&&n-1!==cur)go(n-1,true)});
+</script>
+
+</body></html>
